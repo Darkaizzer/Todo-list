@@ -3,39 +3,44 @@ import "./App.css";
 import TodoList from "./components/todoList/TodoList";
 
 function App() {
-  let [plus, setPlus] = useState(0)
-  let [inputText,setInputText] = useState('hello')
-  
-  // console.log(state);
-  const listsItem = [
-    { id: 1, text: "Выучить базу JS" },
-    { id: 2, text: "Выучить базу html" },
-    { id: 3, text: "Выучить базу css" },
-    { id: 4, text: "Выучить базу react" },
-  ];
-  // let result = 0
-  const onAdd = () => {
-    setPlus(plus + 1);
-   
-    // result += 1
-    // console.log(result);
-  }
-  const onMinus = () => {
-    setPlus(plus - 1);
-  }
-  const onInputChange = (event) => {
-    setInputText(event.target.value)
-  }
+  const [inputText, setInputText] = useState("");
+  const [listsItem, setListItems] = useState([
+    { id: 1, status:false, text: "Выучить базу JS" },
+    { id: 2,  status:false, text: "Выучить базу html" },
+  ]);
+
+  const onSubmitForm = (e) => {
+    e.preventDefault();
+    let newTodo = {
+      id: Date.now(),
+      text: inputText,
+    };
+    setListItems([...listsItem, newTodo]);
+  };
   return (
     <div>
-      <h1>{inputText}</h1>
-      <input type='text' value={inputText} onChange= {onInputChange} />
-      <h1>{plus}</h1>
-      <button onClick={onAdd}> + increment</button>
-      <button onClick={onMinus}> - decrement</button>
-      {listsItem.map((element) => (
-        <TodoList key={element.id} element={element} />
-      ))}
+      <h1>Todo List (0/0)</h1>
+      <form onSubmit={onSubmitForm}>
+        <input
+          type="text"
+          value={inputText}
+          onChange={(e) => setInputText(e.target.value)}
+        />
+        <input type="submit" />
+      </form>
+      {listsItem.length ? (
+        listsItem.map((element, index) => (
+          <TodoList
+            listsItem={listsItem}
+            setListItems={setListItems}
+            number={index}
+            key={element.id}
+            element={element}
+          />
+        ))
+      ) : (
+        <h1>Нет Задач!</h1>
+      )}
     </div>
   );
 }
